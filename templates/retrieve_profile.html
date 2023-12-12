@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="user-dashboard page-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="dashboard-wrapper user-dashboard">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Type</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Username</th>
+                                    <th>Date of Birth</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    {% if user.email == 'admin@gmail.com' %}
+                                        <td><span class="label label-danger">Admin</span></td>
+                                    {% elif user.email == 'staff@gmail.com' %}
+                                        <td><span class="label label-warning">Staff</span></td>
+                                    {% else %}
+                                        <td><span class="label label-primary">User</span></td>
+                                    {% endif %}
+                                    <td>{{ user.first_name }}</td>
+                                    <td>{{ user.last_name }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.date_of_birth }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.password }}</td>
+                                    <td><button class="btn btn-default" onclick="openPopup('{{ user.first_name }}', '{{ user.last_name }}', '{{ user.username }}', '{{ user.date_of_birth }}', '{{ user.email }}')">View</button></td>
+
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add popup HTML code here -->
+<div class="popup" id="popup1">
+    <div class="container">
+        <div class="popup-content">
+            <div class="media">
+                <div class="pull-left text-center">
+                    <img class="image" src="{{ url_for('static', filename='img/team-2.jpg') }}" alt="Image">
+                </div>
+                <div class="media-body">
+                    <ul class="user-profile-list">
+                        <li><span style="font-weight: bold">Full Name:</span> <span id="popup-full-name"></span></li>
+                        <li><span style="font-weight: bold">Username:</span> <span id="popup-username"></span></li>
+                        <li><span style="font-weight: bold">Date of Birth:</span> <span id="popup-dob"></span></li>
+                        <li><span style="font-weight: bold">Email:</span> <span id="popup-email"></span></li>
+                    </ul>
+                </div>
+            </div>
+            <button type="button" class="btn btn-main btn-small" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openPopup(firstName, lastName, username, dateOfBirth, email) {
+        var fullName = firstName + " " + lastName;
+
+        var popup = document.getElementById("popup1");
+        var fullNameElement = popup.querySelector("#popup-full-name");
+        var usernameElement = popup.querySelector("#popup-username");
+        var dobElement = popup.querySelector("#popup-dob");
+        var emailElement = popup.querySelector("#popup-email");
+
+        fullNameElement.innerText = fullName;
+        usernameElement.innerText = username;
+        dobElement.innerText = dateOfBirth;
+        emailElement.innerText = email;
+
+        popup.style.visibility = "visible";
+        popup.style.transform = "translate(-50%, -50%) scale(1)";
+    }
+
+    function closePopup() {
+        var popup = document.getElementById("popup1");
+        popup.style.visibility = "hidden";
+        popup.style.transform = "translate(-50%, -50%) scale(0.1)";
+    }
+</script>
+
+
+
+<style>
+    .popup {
+        width: 400px;
+        background: #fff;
+        border-radius: 6px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.1);
+        text-align: center;
+        padding: 0 30px 30px;
+        color: #333;
+        visibility: hidden;
+        transition: transform 0.4s, top 0.4s;
+    }
+
+    .popup .container {
+        width: 50vh;
+        height: 40vh;
+        border-style: solid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .popup .open-popup {
+        visibility: visible;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .image {
+      width: 3cm;
+      height: 3cm;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+</style>
+
+{% endblock %}
